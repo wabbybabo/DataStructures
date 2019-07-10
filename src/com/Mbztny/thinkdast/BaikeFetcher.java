@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+package com.Mbztny.thinkdast;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 
 public class WikiFetcher {
 	private long lastRequestTime = -1;
@@ -31,10 +30,10 @@ public class WikiFetcher {
 		Document doc = conn.get();
 
 		// select the content text and pull out the paragraphs.
-		Element content = doc.getElementById("mw-content-text");
+		Elements content = doc.getElementsByClass("text");
 
 		// TODO: avoid selecting paragraphs from sidebars and boxouts
-		Elements paras = content.select("p");
+		Elements paras = content.select("span");
 		return paras;
 	}
 
@@ -71,7 +70,7 @@ public class WikiFetcher {
 			long nextRequestTime = lastRequestTime + minInterval;
 			if (currentTime < nextRequestTime) {
 				try {
-					//System.out.println("Sleeping until " + nextRequestTime);
+					// System.out.println("Sleeping until " + nextRequestTime);
 					Thread.sleep(nextRequestTime - currentTime);
 				} catch (InterruptedException e) {
 					System.err.println("Warning: sleep interrupted in fetchWikipedia.");
@@ -87,10 +86,10 @@ public class WikiFetcher {
 	 */
 	public static void main(String[] args) throws IOException {
 		WikiFetcher wf = new WikiFetcher();
-		String url = "https://en.wikipedia.org/wiki/Java_(programming_language)";
-		Elements paragraphs = wf.readWikipedia(url);
-
-		for (Element paragraph: paragraphs) {
+		String url = "https://baike.baidu.com/item/java/85979";
+//		Elements paragraphs = wf.readWikipedia(url);
+		Elements paragraphs = wf.fetchWikipedia(url);
+		for (Element paragraph : paragraphs) {
 			System.out.println(paragraph);
 		}
 	}
